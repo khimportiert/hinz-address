@@ -23,6 +23,9 @@ if %errorlevel% neq 0 (
 
 REM Kopiere die Konfigurationsdatei ins Build-Verzeichnis
 echo [INFO] Kopiere Konfigurationsdateien...
+if not exist "%PROJECT_DIR%\config.properties" (
+    copy "%SRC_DIR%\config.properties" "%PROJECT_DIR%\config.properties" > nul
+)
 copy "%PROJECT_DIR%\config.properties" "%BUILD_DIR%\config.properties" > nul
 if %errorlevel% neq 0 (
     echo [FEHLER] Konnte config.properties nicht kopieren.
