@@ -4,6 +4,7 @@ import config.AppConfig;
 import model.Address;
 import model.AddressMatch;
 import model.ValidationResult;
+import service.PhotonClient;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -53,23 +54,11 @@ public class AddressServer {
             String photonUrl = createPhotonUrl(tcpIn);
 
             // HTTP POST PHOTON
-            HttpResponse<String> photonResponse;
-            try (HttpClient httpClient = HttpClient.newBuilder()
-                    .connectTimeout(Duration.ofSeconds(10))
-                    .build()) {
-
-                HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create(photonUrl)) // Ziel-URL
-                        .timeout(Duration.ofSeconds(15))
-                        .build();
-
-                photonResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            }
-
             Address inputAddress = decodeTcpStringToAddress(tcpIn);
+            String photonResponse = PhotonClient.queryPhoton(inputAddress);
 
             // Bei Unstimmigkeiten wird Google angefragt
-            ValidationResult result = validatePhotonAddressAndQueryGoogle(photonResponse.body(), inputAddress);
+            ValidationResult result = validatePhotonAddressAndQueryGoogle(photonResponse, inputAddress);
 
             if (result.isExactMatch()) {
                 // Exact match gefunden
