@@ -18,10 +18,11 @@ public class PhotonClient {
         String query = address.toString();
         
         String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);
-        String url = String.format("%s?q=%s&limit=%d",
+        String url = String.format("%s?q=%s&limit=%d%s",
             AppConfig.getPhotonBaseUrl(),
             encodedQuery,
-            AppConfig.getPhotonResultLimit()
+            AppConfig.getPhotonResultLimit(),
+            AppConfig.getPhotonLayer().isBlank() ? "" : "&layer=" + AppConfig.getPhotonLayer()
         );
         
         HttpRequest request = HttpRequest.newBuilder()

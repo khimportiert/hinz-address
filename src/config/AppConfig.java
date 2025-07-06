@@ -18,9 +18,21 @@ public class AppConfig {
     public static int getServerPort() {
         return Integer.parseInt(properties.getProperty("server.port"));
     }
+
+    public static int getSocketTimeout() {
+        return Integer.parseInt(properties.getProperty("socket.timeout"));
+    }
+
+    public static boolean getPhotonApiAllowed() {
+        return Boolean.parseBoolean(properties.getProperty("photon.api.allowed"));
+    }
     
     public static String getPhotonBaseUrl() {
         return properties.getProperty("photon.base.url");
+    }
+
+    public static String getPhotonLayer() {
+        return properties.getProperty("photon.layer");
     }
 
     public static int getPhotonResultLimit() {

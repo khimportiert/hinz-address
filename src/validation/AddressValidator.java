@@ -7,6 +7,7 @@ import model.ValidationResult;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import service.GoogleClient;
+import service.PhotonClient;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,63 +15,98 @@ import java.util.List;
 import java.util.Map;
 
 public class AddressValidator {
-    public static ValidationResult validatePhotonAddressAndQueryGoogle(String photonResponse, Address inputAddress) {
-        ValidationResult photonResult = validatePhotonResponse(photonResponse, inputAddress);
+    public static ValidationResult validateWithBackup(Address inputAddress) {
+        ValidationResult photonResult = null;
+        ValidationResult googleResult = null;
 
-        if (photonResult.isExactMatch() || !AppConfig.getGoogleApiAllowed()) {
-            return photonResult;
+        boolean isPhotonAllowed = AppConfig.getPhotonApiAllowed();
+        boolean isGoogleAllowed = AppConfig.getGoogleApiAllowed();
+
+        if (!isPhotonAllowed && !isGoogleAllowed) {
+            throw new IllegalArgumentException("Keine API wurde angefragt. Überprüfe config.properties.");
         }
 
+        // Versuche Photon-Abfrage
+        if (isPhotonAllowed) {
+            try {
+                String photonResponse = PhotonClient.queryPhoton(inputAddress);
+                photonResult = validatePhotonResponse(photonResponse, inputAddress);
+            } catch (Exception e) {
+                System.err.println("Photon-Abfrage fehlgeschlagen: " + e);
+            }
+        }
+
+
+        // Wenn Photon ein exaktes Ergebnis liefert oder Google nicht erlaubt ist, gebe dieses zurück
+        if ((photonResult != null && photonResult.isExactMatch()) || !isGoogleAllowed) {
+            return (photonResult != null) ? photonResult : new ValidationResult("Photon", false, new ArrayList<>());
+        }
+
+        // Versuche Google-Abfrage als Backup
         try {
             String googleResponse = GoogleClient.queryGeocoding(inputAddress);
-            return validateGoogleResponse(googleResponse, inputAddress);
+            googleResult = validateGoogleResponse(googleResponse, inputAddress);
         } catch (Exception e) {
-            return new ValidationResult("Exception", false, new ArrayList<>());
+            System.err.println("Google-Abfrage fehlgeschlagen: " + e);
         }
+
+        // Priorisiere Google-Ergebnisse, wenn die Photon-Ergebnisse nicht genau waren
+        if (googleResult != null && googleResult.isExactMatch()) {
+            return googleResult;
+        }
+
+        // Fallback: Wenn beide keine exakten Ergebnisse liefern, kombiniere die möglichen Matches
+        List<AddressMatch> combinedMatches = new ArrayList<>();
+        if (photonResult != null) {
+            combinedMatches.addAll(photonResult.possibleMatches());
+        }
+        if (googleResult != null) {
+            combinedMatches.addAll(googleResult.possibleMatches());
+        }
+
+        String source = (photonResult != null) ? "Photon + Google" : "Google";
+
+        return new ValidationResult(source, false, combinedMatches);
     }
 
-    private static ValidationResult validatePhotonResponse(String jsonResponse, Address inputAddress) {
-        try {
-            JSONObject root = new JSONObject(jsonResponse);
-            JSONArray features = root.getJSONArray("features");
+    private static ValidationResult validatePhotonResponse(String jsonResponse, Address inputAddress) throws Exception {
+        JSONObject root = new JSONObject(jsonResponse);
+        JSONArray features = root.getJSONArray("features");
 
-            if (features.isEmpty()) {
-                return new ValidationResult("Photon", false, new ArrayList<>());
-            }
-
-            List<AddressMatch> matches = new ArrayList<>();
-
-            for (int i = 0; i < features.length(); i++) {
-                JSONObject feature = features.getJSONObject(i);
-                JSONObject properties = feature.getJSONObject("properties");
-                JSONArray coordinates = feature.getJSONObject("geometry").getJSONArray("coordinates");
-
-                String photonPostcode = properties.optString("postcode", "");
-                String photonCity = properties.optString("city", "");
-                String photonStreet = properties.optString("street", "");
-                String photonHouseNumber = properties.optString("housenumber", "");
-
-                boolean isExactMatch = normalizeString(photonPostcode).equals(normalizeString(inputAddress.plz())) &&
-                        normalizeString(photonCity).equals(normalizeString(inputAddress.city())) &&
-                        compareStreetNames(photonStreet, inputAddress.street()) &&
-                        normalizeString(photonHouseNumber).equals(normalizeString(inputAddress.houseNumber()));
-
-                matches.add(new AddressMatch(
-                        String.format("%s %s, %s %s", photonStreet, photonHouseNumber, photonPostcode, photonCity),
-                        coordinates.getDouble(1), // Photon returns [lon, lat]
-                        coordinates.getDouble(0),
-                        isExactMatch
-                ));
-            }
-
-            boolean firstMatchesExactly = matches.getFirst().isExactMatch();
-            return new ValidationResult("Photon", firstMatchesExactly, matches);
-        } catch (Exception e) {
-            return new ValidationResult("Exception", false, new ArrayList<>());
+        if (features.isEmpty()) {
+            return new ValidationResult("Photon", false, new ArrayList<>());
         }
+
+        List<AddressMatch> matches = new ArrayList<>();
+
+        for (int i = 0; i < features.length(); i++) {
+            JSONObject feature = features.getJSONObject(i);
+            JSONObject properties = feature.getJSONObject("properties");
+            JSONArray coordinates = feature.getJSONObject("geometry").getJSONArray("coordinates");
+
+            String photonPostcode = properties.optString("postcode", "");
+            String photonCity = properties.optString("city", "");
+            String photonStreet = properties.optString("street", "");
+            String photonHouseNumber = properties.optString("housenumber", "");
+
+            boolean isExactMatch = normalizeNames(photonPostcode).equals(normalizeNames(inputAddress.plz())) &&
+                    normalizeNames(photonCity).equals(normalizeNames(inputAddress.city())) &&
+                    compareStreetNames(photonStreet, inputAddress.street()) &&
+                    compareHouseNumbers(photonHouseNumber, inputAddress.houseNumber());
+
+            matches.add(new AddressMatch(
+                    String.format("%s %s, %s %s", photonStreet, photonHouseNumber, photonPostcode, photonCity),
+                    coordinates.getDouble(1), // Photon returns [lon, lat]
+                    coordinates.getDouble(0),
+                    isExactMatch
+            ));
+        }
+
+        boolean firstMatchesExactly = matches.getFirst().isExactMatch();
+        return new ValidationResult("Photon", firstMatchesExactly, matches);
     }
 
-    private static ValidationResult validateGoogleResponse(String jsonResponse, Address inputAddress) {
+    private static ValidationResult validateGoogleResponse(String jsonResponse, Address inputAddress) throws Exception {
         JSONObject root = new JSONObject(jsonResponse);
 
         if (!"OK".equals(root.getString("status"))) {
@@ -95,31 +131,50 @@ public class AddressValidator {
                     !"APPROXIMATE".equals(locationType) &&
                     compareAddressParts(addressParts, inputAddress);
 
-            matches.add(new AddressMatch(
-                    result.getString("formatted_address")
-                            .replace(", Deutschland", "")
-                            .replace(", Germany", ""),
-                    lat,
-                    lng,
-                    isExactMatch
-            ));
+            String formattedAddress = result.optString("formatted_address", null);
+            if (formattedAddress != null) {
+                formattedAddress = formattedAddress
+                        .replace(", Deutschland", "")
+                        .replace(", Germany", "");
+
+                matches.add(new AddressMatch(
+                        formattedAddress,
+                        lat,
+                        lng,
+                        isExactMatch
+                ));
+            }
         }
+
         // Wenn es mindestens einen exakten Match gibt
         boolean firstMatchesExactly = matches.getFirst().isExactMatch();
 
         return new ValidationResult("Google", firstMatchesExactly, matches);
     }
 
-    private static String normalizeString(String input) {
-        if (input == null) return "";
+    private static String normalizeNumbers(String input) {
+        return input
+                .replaceAll("\\s", "")
+                .replaceAll("[\\-/]", " ")
+                .toLowerCase();
+    }
+
+    private static String normalizeNames(String input) {
         return input.trim()
                 .toLowerCase()
                 .replaceAll("\\s+", " ");
     }
 
-    private static boolean compareStreetNames(String street1, String street2) {
-        String s1 = normalizeString(street1);
-        String s2 = normalizeString(street2);
+    public static boolean compareHouseNumbers(String a, String b) {
+        String normalizedA = normalizeNumbers(a);
+        String normalizedB = normalizeNumbers(b);
+
+        return normalizedA.equals(normalizedB);
+    }
+
+    private static boolean compareStreetNames(String a, String b) {
+        String s1 = normalizeNames(a);
+        String s2 = normalizeNames(b);
 
         // Gängige Straßen-Abkürzungen am Wortende ersetzen
         Map<String, String> replacements = Map.of(
@@ -137,7 +192,7 @@ public class AddressValidator {
         return s1.equals(s2);
     }
 
-    private static Map<String, String> extractAddressParts(JSONObject result) {
+    private static Map<String, String> extractAddressParts(JSONObject result) throws NullPointerException {
         JSONArray components = result.getJSONArray("address_components");
         Map<String, String> addressParts = new HashMap<>();
 
@@ -162,9 +217,9 @@ public class AddressValidator {
 
     private static boolean compareAddressParts(Map<String, String> addressParts, Address inputAddress) {
         return compareStreetNames(addressParts.get("street_name"), inputAddress.street()) &&
-                normalizeString(addressParts.get("street_number")).equals(normalizeString(inputAddress.houseNumber())) &&
-                normalizeString(addressParts.get("postal_code")).equals(normalizeString(inputAddress.plz())) &&
-                normalizeString(addressParts.get("locality")).equals(normalizeString(inputAddress.city()));
+                compareHouseNumbers(addressParts.get("street_number"), inputAddress.houseNumber()) &&
+                normalizeNames(addressParts.get("postal_code")).equals(normalizeNames(inputAddress.plz())) &&
+                normalizeNames(addressParts.get("locality")).equals(normalizeNames(inputAddress.city()));
     }
 
 }
