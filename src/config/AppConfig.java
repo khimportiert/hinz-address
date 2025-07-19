@@ -50,4 +50,8 @@ public class AppConfig {
     public static String getGoogleGeocodingUrl() {
         return properties.getProperty("google.geocoding.url");
     }
+
+    public static String getOrsBaseUrl() {
+        return properties.getProperty("ors.base.url");
+    }
 }

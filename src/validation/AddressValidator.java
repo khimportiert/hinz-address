@@ -33,13 +33,14 @@ public class AddressValidator {
                 photonResult = validatePhotonResponse(photonResponse, inputAddress);
             } catch (Exception e) {
                 System.err.println("Photon-Abfrage fehlgeschlagen: " + e);
+                e.printStackTrace();
             }
         }
 
 
         // Wenn Photon ein exaktes Ergebnis liefert oder Google nicht erlaubt ist, gebe dieses zurück
         if ((photonResult != null && photonResult.isExactMatch()) || !isGoogleAllowed) {
-            return (photonResult != null) ? photonResult : new ValidationResult("Photon", false, new ArrayList<>());
+            return (photonResult != null) ? photonResult : new ValidationResult(inputAddress, "Photon", false, new ArrayList<>());
         }
 
         // Versuche Google-Abfrage als Backup
@@ -66,7 +67,7 @@ public class AddressValidator {
 
         String source = (photonResult != null) ? "Photon + Google" : "Google";
 
-        return new ValidationResult(source, false, combinedMatches);
+        return new ValidationResult(inputAddress, source, false, combinedMatches);
     }
 
     private static ValidationResult validatePhotonResponse(String jsonResponse, Address inputAddress) throws Exception {
@@ -74,7 +75,7 @@ public class AddressValidator {
         JSONArray features = root.getJSONArray("features");
 
         if (features.isEmpty()) {
-            return new ValidationResult("Photon", false, new ArrayList<>());
+            return new ValidationResult(inputAddress, "Photon", false, new ArrayList<>());
         }
 
         List<AddressMatch> matches = new ArrayList<>();
@@ -103,14 +104,14 @@ public class AddressValidator {
         }
 
         boolean firstMatchesExactly = matches.getFirst().isExactMatch();
-        return new ValidationResult("Photon", firstMatchesExactly, matches);
+        return new ValidationResult(inputAddress, "Photon", firstMatchesExactly, matches);
     }
 
     private static ValidationResult validateGoogleResponse(String jsonResponse, Address inputAddress) throws Exception {
         JSONObject root = new JSONObject(jsonResponse);
 
         if (!"OK".equals(root.getString("status"))) {
-            return new ValidationResult("Google", false, new ArrayList<>());
+            return new ValidationResult(inputAddress, "Google", false, new ArrayList<>());
         }
 
         List<AddressMatch> matches = new ArrayList<>();
@@ -149,7 +150,7 @@ public class AddressValidator {
         // Wenn es mindestens einen exakten Match gibt
         boolean firstMatchesExactly = matches.getFirst().isExactMatch();
 
-        return new ValidationResult("Google", firstMatchesExactly, matches);
+        return new ValidationResult(inputAddress, "Google", firstMatchesExactly, matches);
     }
 
     private static String normalizeNumbers(String input) {

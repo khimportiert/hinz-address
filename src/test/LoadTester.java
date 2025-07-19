@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class LoadTester {
-    private static final int PORT = 12345;
+    private static final int PORT = 2323;
     private static final int NUM_THREADS = 30;
     private static final int REQUESTS_PER_THREAD = 100;
     private static final Random RANDOM = new Random();

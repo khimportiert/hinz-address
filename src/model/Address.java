@@ -1,6 +1,8 @@
 package model;
 
 public record Address(
+        String id,
+        String country,
         String plz,
         String city,
         String street,

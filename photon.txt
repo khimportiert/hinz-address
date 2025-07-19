@@ -1,0 +1,17 @@
+@echo off
+setlocal enabledelayedexpansion
+
+REM Pfad zur Photon-Server-JAR oder EXE
+set SERVER_CMD=java -jar PhotonServer.jar
+
+:START_SERVER
+echo [%date% %time%] Starte Photon Server...
+%SERVER_CMD%
+if %errorlevel% neq 0 (
+    echo [%date% %time%] WARNUNG: Photon Server wurde unerwartet beendet. Neustart in 5 Sekunden...
+    timeout /t 5 > nul
+    goto START_SERVER
+) else (
+    echo [%date% %time%] INFO: Photon Server wurde erfolgreich beendet.
+    pause
+)

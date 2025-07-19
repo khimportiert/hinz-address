@@ -2,10 +2,10 @@ package server;
 
 import config.AppConfig;
 import model.Address;
+import model.DistanceTime;
+import model.RouteResult;
 import model.ValidationResult;
-import service.AddressDecoder;
-import service.AddressEncoder;
-import service.PhotonClient;
+import service.*;
 import validation.AddressValidator;
 
 import java.io.*;
@@ -77,24 +77,55 @@ public class AddressServer {
         ) {
             socket.setSoTimeout(AppConfig.getSocketTimeout()); // 5 Sekunden Timeout
             
-            String tcpIn = in.readLine();
-            if (tcpIn == null || tcpIn.isBlank()) {
-                return;
-            }
+//            String tcpIn = in.readLine();
+//            if (tcpIn == null || tcpIn.isBlank()) {
+//                return;
+//            }
 
-            Address inputAddress = AddressDecoder.decodeTcpStringToAddress(tcpIn);
-            ValidationResult result = AddressValidator.validateWithBackup(inputAddress);
-
-            synchronized (out) {
-                if (result.isExactMatch()) {
-                    AddressEncoder.writeSingleMatchTcpResponse(result, out);
-                } else if (!result.possibleMatches().isEmpty()) {
-                    AddressEncoder.writeMultiMatchTcpResponse(result, out);
-                } else {
-                    AddressEncoder.writeNoMatchTcpResponse(result, out);
+            StringBuilder sb = new StringBuilder();
+            int c;
+            while ((c = in.read()) != -1) {  // -1 bedeutet EOF
+                if (c == 3) {  // 3 entspricht ETX
+                    break;  // Stoppt das Lesen bei ETX
                 }
-                out.flush();
+                sb.append((char) c);
             }
+
+            String tcpIn = sb.toString();
+
+            if (tcpIn.startsWith("\u0002#0E")) { // Koordinaten Request
+                Address inputAddress = AddressDecoder.decodeTcpStringToAddress(tcpIn);
+
+                ValidationResult result = AddressValidator.validateWithBackup(inputAddress);
+
+                synchronized (out) {
+                    if (result.isExactMatch()) {
+//                    AddressEncoder.writeSingleMatchTcpResponse(result, out); // TODO no exact match?
+                        AddressEncoder.writeMultiMatchTcpResponse(result, out);
+                    } else if (!result.possibleMatches().isEmpty()) {
+                        AddressEncoder.writeMultiMatchTcpResponse(result, out);
+                    } else {
+                        AddressEncoder.writeNoMatchTcpResponse(result, out);
+                    }
+                    out.flush();
+                }
+            }
+
+            else if (tcpIn.startsWith("\u0002#0F")) { // Distance Time Request
+                DistanceTime distanceTime = RouteDecoder.decodeTcpStringToDistanceTime(tcpIn);
+
+                RouteResult routeResult = OrsClient.getRoute(distanceTime);
+
+                synchronized (out) {
+                    RouteEncoder.writeResponse(routeResult, out);
+                    out.flush();
+                }
+            }
+
+            else {
+                System.err.println("Unerwarteter TPC Request: " + tcpIn);
+            }
+
         } catch (Exception e) {
             System.err.println("Fehler beim Bearbeiten eines Clients: " + e);
         }

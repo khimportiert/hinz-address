@@ -6,7 +6,7 @@ import java.net.Socket;
 public class TcpTestClient {
     public static void main(String[] args) {
         try (
-                Socket socket = new Socket("localhost", 12345);
+                Socket socket = new Socket("localhost", 2323);
                 BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))
         ) {
