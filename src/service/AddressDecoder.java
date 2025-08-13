@@ -8,13 +8,13 @@ public class AddressDecoder {
 
 //        #0ER0415R16:53:28, 12.07.20250907Germany0A05133570B06Berlin0C0EStettiner Str.0D0255
 
-        String msgId = null;
-        String id = null;
-        String country = null;
-        String plz = null;
-        String city = null;
-        String street = null;
-        String houseNumber = null;
+        String msgId = "";
+        String id = "";
+        String country = "";
+        String plz = "";
+        String city = "";
+        String street = "";
+        String houseNumber = "";
 
         msgId = tcpIn.substring(2, 4);
 

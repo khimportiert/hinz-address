@@ -6,6 +6,7 @@ import model.AddressMatch;
 import model.ValidationResult;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import service.GoogleCache;
 import service.GoogleClient;
 import service.PhotonClient;
 
@@ -15,6 +16,19 @@ import java.util.List;
 import java.util.Map;
 
 public class AddressValidator {
+
+    public static int Google_Count = 0;
+
+    public static boolean Use_Cache = false;
+    public static GoogleCache Google_Cache;
+
+    static {
+        if (AppConfig.getGoogleUseCache()) {
+            Use_Cache = true;
+            Google_Cache = new GoogleCache(AppConfig.getGoogleCacheUrl());
+        }
+    }
+
     public static ValidationResult validateWithBackup(Address inputAddress) {
         ValidationResult photonResult = null;
         ValidationResult googleResult = null;
@@ -45,8 +59,19 @@ public class AddressValidator {
 
         // Versuche Google-Abfrage als Backup
         try {
-            String googleResponse = GoogleClient.queryGeocoding(inputAddress);
-            googleResult = validateGoogleResponse(googleResponse, inputAddress);
+
+            AddressMatch cacheMatch;
+            if (Use_Cache && (cacheMatch = Google_Cache.find(inputAddress.toString())) != null) {
+                List<AddressMatch> matches = new ArrayList<>();
+                matches.add(cacheMatch);
+                googleResult = new ValidationResult(inputAddress, "Google Cache", true, matches);
+            }
+            else {
+                String googleResponse = GoogleClient.queryGeocoding(inputAddress);
+                googleResult = validateGoogleResponse(googleResponse, inputAddress, Google_Cache);
+                Google_Count++;
+            }
+
         } catch (Exception e) {
             System.err.println("Google-Abfrage fehlgeschlagen: " + e);
         }
@@ -58,11 +83,11 @@ public class AddressValidator {
 
         // Fallback: Wenn beide keine exakten Ergebnisse liefern, kombiniere die möglichen Matches
         List<AddressMatch> combinedMatches = new ArrayList<>();
-        if (photonResult != null) {
-            combinedMatches.addAll(photonResult.possibleMatches());
-        }
         if (googleResult != null) {
             combinedMatches.addAll(googleResult.possibleMatches());
+        }
+        if (photonResult != null) {
+            combinedMatches.addAll(photonResult.possibleMatches());
         }
 
         String source = (photonResult != null) ? "Photon + Google" : "Google";
@@ -85,17 +110,21 @@ public class AddressValidator {
             JSONObject properties = feature.getJSONObject("properties");
             JSONArray coordinates = feature.getJSONObject("geometry").getJSONArray("coordinates");
 
+            String name = properties.optString("name", "").trim();
+
             String photonPostcode = properties.optString("postcode", "");
             String photonCity = properties.optString("city", "");
             String photonStreet = properties.optString("street", "");
             String photonHouseNumber = properties.optString("housenumber", "");
 
-            boolean isExactMatch = normalizeNames(photonPostcode).equals(normalizeNames(inputAddress.plz())) &&
+            boolean isExactMatch =
+                    normalizeNames(photonPostcode).equals(normalizeNames(inputAddress.plz())) &&
                     normalizeNames(photonCity).equals(normalizeNames(inputAddress.city())) &&
                     compareStreetNames(photonStreet, inputAddress.street()) &&
                     compareHouseNumbers(photonHouseNumber, inputAddress.houseNumber());
 
             matches.add(new AddressMatch(
+                    name,
                     String.format("%s %s, %s %s", photonStreet, photonHouseNumber, photonPostcode, photonCity),
                     coordinates.getDouble(1), // Photon returns [lon, lat]
                     coordinates.getDouble(0),
@@ -103,11 +132,16 @@ public class AddressValidator {
             ));
         }
 
+        // Sortierung bleibt stabil
+        matches.sort((a, b) -> Boolean.compare(!a.isExactMatch(), !b.isExactMatch()));
+
+        // Wenn es mindestens einen exakten Match gibt
         boolean firstMatchesExactly = matches.getFirst().isExactMatch();
+
         return new ValidationResult(inputAddress, "Photon", firstMatchesExactly, matches);
     }
 
-    private static ValidationResult validateGoogleResponse(String jsonResponse, Address inputAddress) throws Exception {
+    private static ValidationResult validateGoogleResponse(String jsonResponse, Address inputAddress, GoogleCache cache) throws Exception {
         JSONObject root = new JSONObject(jsonResponse);
 
         if (!"OK".equals(root.getString("status"))) {
@@ -128,9 +162,11 @@ public class AddressValidator {
             double lng = location.getDouble("lng");
 
             Map<String, String> addressParts = extractAddressParts(result);
-            boolean isExactMatch = !isPartialMatch &&
-                    !"APPROXIMATE".equals(locationType) &&
-                    compareAddressParts(addressParts, inputAddress);
+            boolean isExactMatch =
+                    !isPartialMatch
+                    && ("ROOFTOP".equals(locationType) || "RANGE_INTERPOLATED".equals(locationType))
+//                    && compareAddressParts(addressParts, inputAddress)
+                    ;
 
             String formattedAddress = result.optString("formatted_address", null);
             if (formattedAddress != null) {
@@ -139,6 +175,7 @@ public class AddressValidator {
                         .replace(", Germany", "");
 
                 matches.add(new AddressMatch(
+                        "",
                         formattedAddress,
                         lat,
                         lng,
@@ -147,8 +184,15 @@ public class AddressValidator {
             }
         }
 
+        // Sortierung bleibt stabil
+        matches.sort((a, b) -> Boolean.compare(!a.isExactMatch(), !b.isExactMatch()));
+
         // Wenn es mindestens einen exakten Match gibt
         boolean firstMatchesExactly = matches.getFirst().isExactMatch();
+
+        if (Use_Cache && firstMatchesExactly) {
+            cache.save(inputAddress.toString(), matches.getFirst());
+        }
 
         return new ValidationResult(inputAddress, "Google", firstMatchesExactly, matches);
     }

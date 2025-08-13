@@ -5,5 +5,12 @@ public record RouteResult(
     double distanceKm,
     int durationSec
 ) {
-
+    @Override
+    public String toString() {
+        return "RouteResult{" +
+                "id='" + id + '\'' +
+                ", distanceKm=" + distanceKm +
+                ", durationSec=" + durationSec +
+                '}';
+    }
 }

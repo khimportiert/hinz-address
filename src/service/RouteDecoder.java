@@ -4,10 +4,10 @@ import model.DistanceTime;
 
 public class RouteDecoder {
     public static DistanceTime decodeTcpStringToDistanceTime(String tcpIn) {
-        String msgId = null;
-        String id = null;
-        String pos = null;
-        String zos = null;
+        String msgId = "";
+        String id = "";
+        String pos = "";
+        String zos = "";
         double rpa = 0;
         double rpv = 0;
         double rpn = 0;
@@ -17,7 +17,7 @@ public class RouteDecoder {
         int rsv = 0;
         int rsn = 0;
         int rso = 0;
-        String tmp = null;
+        String tmp = "";
 
         // 04 : Id String
         // 07 : PEO (pos) String

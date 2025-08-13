@@ -51,6 +51,14 @@ public class AppConfig {
         return properties.getProperty("google.geocoding.url");
     }
 
+    public static boolean getGoogleUseCache() {
+        return Boolean.parseBoolean(properties.getProperty("google.use.cache"));
+    }
+
+    public static String getGoogleCacheUrl() {
+        return properties.getProperty("google.cache.url");
+    }
+
     public static String getOrsBaseUrl() {
         return properties.getProperty("ors.base.url");
     }

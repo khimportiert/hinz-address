@@ -1,4 +1,6 @@
 @echo off
+title TCP Bridge Auto-Restart
+
 REM Name des Servers und der Logdatei
 set SERVER_MAIN_CLASS=main.Main
 set LOG_FILE=server.log

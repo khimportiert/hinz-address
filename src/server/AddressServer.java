@@ -11,9 +11,13 @@ import validation.AddressValidator;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import static service.LogManager.getCurrentTimestamp;
 
 public class AddressServer {
     private final ExecutorService threadPool;
@@ -30,6 +34,9 @@ public class AddressServer {
         try {
             serverSocket = new ServerSocket(AppConfig.getServerPort());
             System.out.println("Server gestartet auf Port " + AppConfig.getServerPort());
+
+            // Load Cache
+            new AddressValidator();
 
             while (isRunning) {
                 try {
@@ -72,11 +79,13 @@ public class AddressServer {
 
     private void handleClient(Socket socket) {
         try (socket;
-             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))
+             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.ISO_8859_1));
+             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.ISO_8859_1))
         ) {
             socket.setSoTimeout(AppConfig.getSocketTimeout()); // 5 Sekunden Timeout
-            
+
+            int port = socket.getPort();
+
 //            String tcpIn = in.readLine();
 //            if (tcpIn == null || tcpIn.isBlank()) {
 //                return;
@@ -93,41 +102,52 @@ public class AddressServer {
 
             String tcpIn = sb.toString();
 
-            if (tcpIn.startsWith("\u0002#0E")) { // Koordinaten Request
-                Address inputAddress = AddressDecoder.decodeTcpStringToAddress(tcpIn);
+            LogManager.logMessage(port, "(=>)", tcpIn);
 
+            if (tcpIn.startsWith("\u0002#0ER")) { // Koordinaten Request
+                Address inputAddress = AddressDecoder.decodeTcpStringToAddress(tcpIn);
                 ValidationResult result = AddressValidator.validateWithBackup(inputAddress);
 
                 synchronized (out) {
+                    String res;
                     if (result.isExactMatch()) {
-//                    AddressEncoder.writeSingleMatchTcpResponse(result, out); // TODO no exact match?
-                        AddressEncoder.writeMultiMatchTcpResponse(result, out);
+                        res = AddressEncoder.writeSingleMatchTcpResponse(result, out);
                     } else if (!result.possibleMatches().isEmpty()) {
-                        AddressEncoder.writeMultiMatchTcpResponse(result, out);
+                        res = AddressEncoder.writeMultiMatchTcpResponse(result, out);
                     } else {
-                        AddressEncoder.writeNoMatchTcpResponse(result, out);
+                        res = AddressEncoder.writeNoMatchTcpResponse(result, out);
                     }
                     out.flush();
+
+                    LogManager.logMessage(port, "(<=)", res);
                 }
             }
 
-            else if (tcpIn.startsWith("\u0002#0F")) { // Distance Time Request
+            else if (tcpIn.startsWith("\u0002#0FR")) { // Distance Time Request
                 DistanceTime distanceTime = RouteDecoder.decodeTcpStringToDistanceTime(tcpIn);
-
                 RouteResult routeResult = OrsClient.getRoute(distanceTime);
 
                 synchronized (out) {
-                    RouteEncoder.writeResponse(routeResult, out);
+                    String res = RouteEncoder.writeResponse(routeResult, out);
                     out.flush();
+
+                    LogManager.logMessage(port, "(<=)", res);
                 }
             }
 
             else {
-                System.err.println("Unerwarteter TPC Request: " + tcpIn);
+                String timestamp = getCurrentTimestamp();
+                System.err.printf("[%s] %s%n", timestamp, "Unerwarteter TPC Request: " + tcpIn);
             }
 
-        } catch (Exception e) {
-            System.err.println("Fehler beim Bearbeiten eines Clients: " + e);
+        }
+        catch (SocketTimeoutException e) {
+//            String timestamp = getCurrentTimestamp();
+//            System.err.printf("[%s] %s%n", timestamp, e.getMessage());
+        }
+        catch (Exception e) {
+            String timestamp = getCurrentTimestamp();
+            System.err.printf("[%s] %s%n", timestamp, "Fehler beim Bearbeiten eines Clients: " + e);
         }
     }
 }

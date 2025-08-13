@@ -5,6 +5,8 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -76,15 +78,15 @@ public class LoadTester {
 
         switch (requestType) {
 //            case 0: // Leere Anfrage
-//                return "";
+//                return "\u0002\u0003";
 //            case 1: // Ungültiges Format
-//                return "InvalidRequest123";
+//                return "\u0002InvalidRequest123\u0003";
 //            case 2: // Fehlerhafte Syntax
-//                return "0A051315900B06Berlin0C0BKürbissteig"; // Fehlender Teil
+//                return "\u00020A051315900B06Berlin0C0BKürbissteig\u0003"; // Fehlender Teil
 //            case 3: // Sonderzeichen
-//                return "0A05!@#$%0B06Test0C0BTest0D001";
+//                return "\u00020A05!@#$%0B06Test0C0BTest0D001\u0003";
 //            case 4: // Zu lange Werte
-//                return "0A05" + "9".repeat(20) + "0B06Berlin0C0BTeststraße0D001";
+//                return "\u00020A05" + "9".repeat(20) + "0B06Berlin0C0BTeststraße0D001\u0003";
             default: // Gültige Anfrage
                 return generateValidRequest();
         }
@@ -96,14 +98,14 @@ public class LoadTester {
         String street = STREETS.get(RANDOM.nextInt(STREETS.size()));
         String houseNumber = String.format("%03d", RANDOM.nextInt(200));
 
-        return String.format("0A05%s0B%02X%s0C%02X%s0D%02X%s",
+        return String.format("\u0002#0ER0A05%s0B%02X%s0C%02X%s0D%02X%s\u0003",
                 plz, city.length(), city, street.length(), street, houseNumber.length(), houseNumber);
     }
 
     private static void sendSingleRequest(String request) {
         try (Socket socket = new Socket("localhost", PORT);
-             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.ISO_8859_1));
+             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.ISO_8859_1))) {
 
             out.write(request);
             out.newLine();
