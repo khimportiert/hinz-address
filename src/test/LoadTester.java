@@ -79,8 +79,8 @@ public class LoadTester {
         switch (requestType) {
 //            case 0: // Leere Anfrage
 //                return "\u0002\u0003";
-//            case 1: // Ungültiges Format
-//                return "\u0002InvalidRequest123\u0003";
+            case 1: // Ungültiges Format
+                return "\u0002InvalidRequest123\u0003";
 //            case 2: // Fehlerhafte Syntax
 //                return "\u00020A051315900B06Berlin0C0BKürbissteig\u0003"; // Fehlender Teil
 //            case 3: // Sonderzeichen

@@ -17,7 +17,12 @@ import java.util.Map;
 
 public class AddressValidator {
 
+    public static int Photon_Count = 0;
     public static int Google_Count = 0;
+    public static int Google_Cache_Count = 0;
+    public static int Unresolved_Count = 0;
+    public static int Exact_Count = 0;
+    public static int Multi_Count = 0;
 
     public static boolean Use_Cache = false;
     public static GoogleCache Google_Cache;
@@ -37,12 +42,14 @@ public class AddressValidator {
         boolean isGoogleAllowed = AppConfig.getGoogleApiAllowed();
 
         if (!isPhotonAllowed && !isGoogleAllowed) {
+            Unresolved_Count++;
             throw new IllegalArgumentException("Keine API wurde angefragt. Überprüfe config.properties.");
         }
 
         // Versuche Photon-Abfrage
         if (isPhotonAllowed) {
             try {
+                Photon_Count++;
                 String photonResponse = PhotonClient.queryPhoton(inputAddress);
                 photonResult = validatePhotonResponse(photonResponse, inputAddress);
             } catch (Exception e) {
@@ -59,17 +66,17 @@ public class AddressValidator {
 
         // Versuche Google-Abfrage als Backup
         try {
-
+            Google_Count++;
             AddressMatch cacheMatch;
             if (Use_Cache && (cacheMatch = Google_Cache.find(inputAddress.toString())) != null) {
                 List<AddressMatch> matches = new ArrayList<>();
                 matches.add(cacheMatch);
                 googleResult = new ValidationResult(inputAddress, "Google Cache", true, matches);
+                Google_Cache_Count++;
             }
             else {
                 String googleResponse = GoogleClient.queryGeocoding(inputAddress);
                 googleResult = validateGoogleResponse(googleResponse, inputAddress, Google_Cache);
-                Google_Count++;
             }
 
         } catch (Exception e) {
@@ -165,10 +172,10 @@ public class AddressValidator {
             boolean isExactMatch =
                     !isPartialMatch
                     && !"APPROXIMATE".equals(locationType)
-                    && addressParts.getOrDefault("postal_code", "").equals(inputAddress.plz())
-                    && addressParts.getOrDefault("locality", "").equals(inputAddress.city())
-                    && normalizeNumbers(addressParts.getOrDefault("street_number", "")).equals(normalizeNumbers(inputAddress.houseNumber()))
-//                    && compareAddressParts(addressParts, inputAddress)
+//                    && addressParts.getOrDefault("postal_code", "").equals(inputAddress.plz())
+//                    && addressParts.getOrDefault("locality", "").equals(inputAddress.city())
+//                    && normalizeNumbers(addressParts.getOrDefault("street_number", "")).equals(normalizeNumbers(inputAddress.houseNumber()))
+                    && compareAddressParts(addressParts, inputAddress)
                     ;
 
             String formattedAddress = result.optString("formatted_address", null);

@@ -12,13 +12,15 @@ import java.io.IOException;
 public class TxtTester {
     public static void main(String[] args) {
 
-//        Address adr = new Address("0", "",  "13347", "Berlin", "Gerichtstraße", "21-22");
-//        ValidationResult result = AddressValidator.validateWithBackup(adr);
-//        for (AddressMatch match : result.possibleMatches().stream().distinct().toList()) {
-//            System.out.println(result.source() + ": " + match.formattedAddress() + " (" + match.name() + ")" + " " + match.isExactMatch());
-//        }
-//
-//        System.exit(0);
+        // Gerichtstr. 21-22, 13347 Berlin
+
+        Address adr = new Address("0", "",  "13347", "Berlin", "Gerichtstr", "21-22");
+        ValidationResult result = AddressValidator.validateWithBackup(adr);
+        for (AddressMatch match : result.possibleMatches().stream().distinct().toList()) {
+            System.out.println(result.source() + ": " + match.formattedAddress() + " (" + match.name() + ")" + " " + match.isExactMatch());
+        }
+
+        System.exit(0);
 
         try (BufferedReader br = new BufferedReader(new FileReader("adressen.txt"))) {
             String zeile;

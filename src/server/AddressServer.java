@@ -102,6 +102,10 @@ public class AddressServer {
                     break;  // Stoppt das Lesen bei ETX
                 }
                 sb.append((char) c);
+
+                if (sb.toString().endsWith("\r\n\r\n")) {
+                    break;
+                }
             }
 
             String tcpIn = sb.toString();
@@ -115,10 +119,13 @@ public class AddressServer {
                 synchronized (out) {
                     String res;
                     if (result.isExactMatch() || result.possibleMatches().size() == 1) {
+                        // AddressValidator.Count++ in writeSingleMatchTcpResponse()
                         res = AddressEncoder.writeSingleMatchTcpResponse(result, out);
                     } else if (!result.possibleMatches().isEmpty()) {
+                        AddressValidator.Multi_Count++;
                         res = AddressEncoder.writeMultiMatchTcpResponse(result, out);
                     } else {
+                        AddressValidator.Unresolved_Count++;
                         res = AddressEncoder.writeNoMatchTcpResponse(result, out);
                     }
                     out.flush();
@@ -136,6 +143,34 @@ public class AddressServer {
                     out.flush();
 
                     LogManager.logMessage(port, "(<=)", res);
+                }
+            }
+
+            else if (tcpIn.startsWith("GET /")) { // HTTP Request auf Root-Pfad
+                synchronized (out) {
+                    // HTTP-Header + einfache HTML-Seite erstellen
+                    String httpResponse =
+                            "HTTP/1.1 200 OK\r\n" +
+                                    "Content-Type: text/html; charset=UTF-8\r\n" +
+                                    "Connection: close\r\n" +
+                                    "\r\n" +
+                                    "<!DOCTYPE html>" +
+                                    "<html>" +
+                                    "<head><title>Adressen Server</title></head>" +
+                                    "<body><h1>Anfragen seit Start</h1></body>" +
+                                    "<body><h3>Anfragen an Photon (Local): " + AddressValidator.Photon_Count + "</h3></body>" +
+                                    "<body><h3>Anfragen an Google (Cache): " + AddressValidator.Google_Cache_Count + "</h3></body>" +
+                                    "<body><h3>Anfragen an Google (API): " + AddressValidator.Google_Count + "</h3></body>" +
+                                    "<br>" +
+                                    "<body><h3>Davon exakte Ergebnisse: " + AddressValidator.Exact_Count + "</h3></body>" +
+                                    "<body><h3>Davon (multi)auswahl Ergebnisse: " + AddressValidator.Multi_Count + "</h3></body>" +
+                                    "<body><h3>Davon ohne Ergebnis: " + AddressValidator.Unresolved_Count + "</h3></body>" +
+                                    "</html>";
+
+                    out.write(httpResponse);
+                    out.flush();
+
+                    LogManager.logMessage(port, "(<=)", "[HTTP HTML Seite gesendet]");
                 }
             }
 

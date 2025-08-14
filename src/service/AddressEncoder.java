@@ -3,6 +3,7 @@ package service;
 import config.AppConfig;
 import model.AddressMatch;
 import model.ValidationResult;
+import validation.AddressValidator;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -23,11 +24,13 @@ public class AddressEncoder {
         tmp += String.format("04%02X%s", result.requestedAddress().id().length(), result.requestedAddress().id());
 
         if (match.isExactMatch() || !AppConfig.useDummy()) {
+            AddressValidator.Exact_Count++;
             tmp += String.format("0E%02X%s", 4, "0101"); // n vom m
             tmp += String.format("03%02X%s", match.formattedAddress().length(), match.formattedAddress()); // txt
             tmp += String.format("0715%s;%s", lng, lat); // lon;lat
         }
         else {
+            AddressValidator.Multi_Count++;
             tmp += String.format("0E%02X%s", 4, "0102"); // n vom m
             tmp += String.format("03%02X%s", match.formattedAddress().length(), match.formattedAddress()); // txt
             tmp += String.format("0715%s;%s", lng, lat); // lon;lat
