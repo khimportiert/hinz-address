@@ -34,7 +34,7 @@ public class AddressEncoder {
 
             tmp += String.format("0E%02X%s", 4, "0202"); // n vom m
             tmp += String.format("03%02X%s", "Bitte nicht anklicken".length(), "Bitte nicht anklicken"); // txt
-            tmp += String.format("0715%s;%s", "013.408333", "052.518611"); // lon;lat von Berlin
+            tmp += String.format("0715%s;%s", "010.452764", "051.165707"); // lon;lat Mitte von Deutschland
         }
 
         out.write(0x02);
