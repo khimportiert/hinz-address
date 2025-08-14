@@ -1,0 +1,308 @@
+﻿Heinz-Galinski-Str.,1,13347,Berlin
+Gerichtstr.,79-80,13347,Berlin
+Dieffenbachstr.,1,10967,Berlin
+Rudower Str.,176a,12351,Berlin
+Wüsthoffstr.,15,12101,Berlin
+Grenzallee,53,12057,Berlin
+Am Nordgraben,2,13509,Berlin
+Neue Bergstr.,5,13585,Berlin
+Sparrstr.,6 A,13353,Berlin
+Bismarckstr.,95-96,10625,Berlin
+Erdmannstr.,6,10827,Berlin
+Bäumerplan,24,12101,Berlin
+Ackerstr.,50,13355,Berlin
+Prinzenallee,84,13357,Berlin
+Böttgerstr.,1,13357,Berlin
+Augustenburger Platz,1,13353,Berlin
+Teichstr.,44,13407,Berlin
+Glasgower Str.,31,13349,Berlin
+Charitéplatz,1,10117,Berlin
+Kurhausstr.,17,13467,Berlin
+Rubensstr.,125,12157,Berlin
+Große Hamburger Str.,5-11,10115,Berlin
+Sansibarstr.,6,13351,Berlin
+Müllerstr.,32a,13353,Berlin
+An der Mühle,2-9,13507,Berlin
+Avenue Jean Mermoz,17,13405,Berlin
+Turmstr.,65,10555,Berlin
+Höhensteig,1,12526,Berlin
+Rudower Str.,48,12351,Berlin
+Senftenberger Ring,51,13435,Berlin
+Genter Str.,3,13353,Berlin
+Müllerstr.,156a,13353,Berlin
+Wenckebachstr.,23,12099,Berlin
+Brunnenstr.,91,13355,Berlin
+Turmstr.,21,10559,Berlin
+Brückenstr.,3,10179,Berlin
+Müllerstr.,51,13349,Berlin
+Grüntaler Str.,43,13359,Berlin
+Albertinenstr.,20,13086,Berlin
+Florastr.,44,13187,Berlin
+Willdenowstr.,4,13353,Berlin
+Müllerstr.,153a,13353,Berlin
+Scharnhorststr.,13,10115,Berlin
+Gerichtstr.,79-80 WB2,13347,Berlin
+Juchaczweg,21,12351,Berlin
+Roseggerstr.,19,12059,Berlin
+Kösliner Str.,4a,13357,Berlin
+Spandauer Damm,130,14050,Berlin
+Platz der Vereinten Nationen,2,10249,Berlin
+Grüntaler Str.,53,13359,Berlin
+Clayallee,346A,14169,Berlin
+Zabel-Krüger-Damm,42,13469,Berlin
+Freienwalder Str.,28,13359,Berlin
+Transvaalstr.,22,13351,Berlin
+Stargardtstr.,14,13407,Berlin
+Paretzer Str.,12,10713,Berlin
+Wilsnacker Str.,63,10559,Berlin
+Karl-Marx-Str.,272,12051,Berlin
+Landsberger Allee,49,10249,Berlin
+Bristolstr.,27,13349,Berlin
+Ollenhauerstr.,26,13403,Berlin
+Avenue Jean Mermoz,13,13405,Berlin
+Wilhelmsruher Damm,116,13439,Berlin
+Reinickendorfer Str.,61,13347,Berlin
+Friedrichstr.,71,10117,Berlin
+Eosanderstr.,16,10587,Berlin
+Falkenhagener Str.,28,13585,Berlin
+Dickensweg,25-39,14055,Berlin
+Reginhardstr.,59,13409,Berlin
+Oranienburger Str.,86,13437,Berlin
+Danziger Str.,107,10405,Berlin
+Müllerstr.,52,13349,Berlin
+Wilhelmsruher Damm,198,13439,Berlin
+Nordufer,7,13353,Berlin
+Ollenhauerstr.,3,13403,Berlin
+Buschkrugallee,139,12359,Berlin
+Emmentaler Str.,83,13407,Berlin
+Seestr.,64,13347,Berlin
+Landsberger Allee,56a,10249,Berlin
+Birkheidering,27,12527,Berlin
+Schwyzer Str.,7,13349,Berlin
+Antonstr.,6,13347,Berlin
+Huttwiler Weg,2,13407,Berlin
+Schulzestr.,10,13187,Berlin
+Herbststr.,34,13409,Berlin
+Pillkaller Allee,1,14055,Berlin
+Gerichtstr.,21-22,13347,Berlin
+Königin-Elisabeth-Str.,7,14059,Berlin
+Henningweg,12,12524,Berlin
+Genter Str.,71,13353,Berlin
+Schwyzer Str.,9,13349,Berlin
+Lindauer Allee,79,13407,Berlin
+Septimerstr.,26,13407,Berlin
+Ullsteinstr.,159,12105,Berlin
+Maxstr.,2-4,13347,Berlin
+Senftenberger Ring,5a,13439,Berlin
+Wilhelmsruher Damm,185,13439,Berlin
+Müllerstr.,76,13349,Berlin
+Alt-Moabit,90b,10559,Berlin
+Türkenstr.,1a,13349,Berlin
+Lübecker Str.,3,10559,Berlin
+Potsdamer Str.,38,14163,Berlin
+Brüsseler Str.,3,13353,Berlin
+Senftenberger Ring,36,13435,Berlin
+Pfahlerstr.,7,13403,Berlin
+Am Nordgraben,5,13509,Berlin
+Wittenauer Str.,102-106,13435,Berlin
+Kapweg,3,13405,Berlin
+Otto-Dix-Str.,22,10557,Berlin
+Philippstraße,10,10115,Berlin
+Drontheimer Str.,39-40,13359,Berlin
+Reinickendorfer Str.,57,13347,Berlin
+Frauenfelder Weg,7 b,13407,Berlin
+Stettiner Str.,55,13357,Berlin
+Genter Str.,60,13353,Berlin
+Adolfstr.,3,13347,Berlin
+Am Stand,5,13409,Berlin
+Markstr.,19i,13409,Berlin
+Sommerstr.,25 c,13409,Berlin
+Schloßstr.,6,13507,Berlin
+Samoastr.,9,13353,Berlin
+Kameruner Str.,49,13351,Berlin
+Markstr.,19,13409,Berlin
+Reginhardstr.,68,13409,Berlin
+Bastianstr.,1,13357,Berlin
+Kruppstr.,12,10559,Berlin
+Utrechter Str.,48,13347,Berlin
+Reinickendorfer Str.,11-12,13347,Berlin
+Antonienstr.,55,13403,Berlin
+Kurfürstendamm,126-127,10711,Berlin
+Bundesallee,48 b,10715,Berlin
+Wilhelm-Kuhr-Str.,78,13187,Berlin
+Petersburger Str.,72 a,10249,Berlin
+Müllerstr.,139,13353,Berlin
+Residenzstr.,95-96,13409,Berlin
+Mariendorfer Weg,22-24,12051,Berlin
+Alt-Reinickendorf,46,13407,Berlin
+Kurhausstr.,30,13467,Berlin
+Saalmannstr.,16,13403,Berlin
+General-Woyna-Str.,1,13403,Berlin
+Wilhelmsruher Damm,175,13439,Berlin
+Bernauer Str.,115-118,13355,Berlin
+Schwabstedter Weg,34,13503,Berlin
+Schloßstr.,2,14059,Berlin
+Budapester Str.,15-19,10787,Berlin
+Engelmannweg,74,13403,Berlin
+Scharnweberstr.,44,13405,Berlin
+Büdnerring,10,13409,Berlin
+Residenzstr.,37,13409,Berlin
+Kiautschoustr.,19,13353,Berlin
+Alt-Moabit,93,10559,Berlin
+Teichstr.,32,13407,Berlin
+Scharnweberstr.,1,13405,Berlin
+Bismarckstr.,30,10625,Berlin
+Fritz-Erler-Allee,116,12351,Berlin
+Dannenwalder Weg,174,13439,Berlin
+Senftenberger Ring,3 a,13439,Berlin
+Preysingstr.,40,12249,Berlin
+Ackerstr.,104,13355,Berlin
+Müllerstr.,96 A,13349,Berlin
+Harzburger Str.,1,13187,Berlin
+Waldkauzstr.,30a,13505,Berlin
+Käthe-Niederkirchner-Str.,39,10407,Berlin
+Prenzlauer Allee,25,10405,Berlin
+Türkenstr.,24,13349,Berlin
+Ostender Str.,1,13353,Berlin
+Berolinastr.,9,10178,Berlin
+Große Hamburger Str.,5,10115,Berlin
+Beusselstr.,61,10553,Berlin
+Waldstr.,27,10551,Berlin
+Gottschedstr.,7 WG,13357,Berlin
+Buddestr.,10,13507,Berlin
+Am Tegeler Hafen,2,13507,Berlin
+Saatwinkler Damm,1 a,13627,Berlin
+Turmstr.,91,10559,Berlin
+Hindenburgdamm,30,12203,Berlin
+Dieffenbachstr.,40,10967,Berlin
+Müllerstr.,56-58,13349,Berlin
+Mariendorfer Damm,148-150,12107,Berlin
+Antonstr.,6-7 (6),13347,Berlin
+Pritzhagener Weg,3,12685,Berlin
+Föttingerzeile,49,12277,Berlin
+Winterstr.,10,13409,Berlin
+Pücklerstr.,40,10997,Berlin
+Grazer Damm,218,12157,Berlin
+Orionstr.,3,12435,Berlin
+Kaiserdamm,112,14057,Berlin
+Wexstr.,30,10715,Berlin
+Birkbuschstr.,36,12167,Berlin
+Leonorenstr.,17-33,12247,Berlin
+Mariendorfer Damm,19-21,12109,Berlin
+Franz-Körner-Str.,70 A,12347,Berlin
+Grindelwaldweg,14,13407,Berlin
+Christoph-Ruden-Str.,5,12349,Berlin
+Antonstr.,6-7,13347,Berlin
+Schudomastr.,16,12055,Berlin
+Koloniestr.,23,13359,Berlin
+Ortolanweg,38,12359,Berlin
+Lothar-Bucher-Str.,2,12157,Berlin
+Ragazer Str.,5,13407,Berlin
+Schönefelder Chaussee,241,12524,Berlin
+Oudenarder Str.,5,13347,Berlin
+Müllerstr.,40,13353,Berlin
+Walterhöferstr.,11,14165,Berlin
+Breite Str.,46-47,13187,Berlin
+Saupeweg,7a,13127,Berlin
+Techowpromenade,9,13437,Berlin
+Weichselstr.,28,10247,Berlin
+Herzbergstr.,79,10365,Berlin
+Schönfließer Str.,9,10439,Berlin
+Köpenicker Str.,191,10997,Berlin
+Askanischer Platz,1,10963,Berlin
+Romanshorner Weg,45,13407,Berlin
+Klemkestr.,4,13409,Berlin
+Steegerstr.,36,13359,Berlin
+Prinzenallee,89-90,13357,Berlin
+Friedrichstr.,113 a,10117,Berlin
+Tempelhofer Damm,218,12099,Berlin
+Am Sandwerder,43,14109,Berlin
+Togostr.,32,13351,Berlin
+Karolinenstr.,21,13507,Berlin
+Pfarrsiedlung,15,12355,Berlin
+Carl-Neuberg-Str.,1,30625,Hannover
+Wittstocker Str.,22,10553,Berlin
+Oldenburger Str.,37,10551,Berlin
+An der Reha-Klinik,1,15537,Grünheide / Mark
+Senftenberger Ring,3a,13439,Berlin
+Finsterwalder Str.,96,13435,Berlin
+Tauentzienstr.,1,10789,Berlin
+Reinickendorfer Str.,96,13347,Berlin
+Pankstr.,77,13357,Berlin
+Wilmsstr.,14,10961,Berlin
+Telefunkenweg,4,12529,Schönefeld
+Müllerstr.,97a,13349,Berlin
+Schulstr.,51 A,13347,Berlin
+Bernstorffstr.,5,13507,Berlin
+Sigismundkorso,49,13465,Berlin
+Nagolder Pfad,4,13469,Berlin
+Robinienweg,2,13467,Berlin
+Triftstr.,69,13353,Berlin
+Hochstr.,11 f,13357,Berlin
+Schwedenstr.,13,13357,Berlin
+Bergfriedstr.,19,10969,Berlin
+Borussiastr.,15,12103,Berlin
+Kladower Damm,223,14089,Berlin
+Waldsteg,6,13158,Berlin
+Scharnweberstr.,1-2,13405,Berlin
+Alt-Wittenau,90-90 a,13437,Berlin
+Lindauer Allee,43,13407,Berlin
+Gotthardstr.,32,13407,Berlin
+Auguste-Viktoria-Allee,4,13403,Berlin
+Londoner Str.,30,13349,Berlin
+Scharnweberstr.,26,13405,Berlin
+Fidicinstr.,2,10965,Berlin
+Wisbyer Str.,32,13189,Berlin
+Boyenstr.,41,10115,Berlin
+Neue Grünstr.,16a,10179,Berlin
+Reinickendorfer Str.,58a,13347,Berlin
+Brunnenstr.,121,13355,Berlin
+Stephanstr.,33,10559,Berlin
+Charlottenstr.,75,14467,Potsdam
+Demminer Str.,3,13355,Berlin
+Eisbärenweg,14,13407,Berlin
+Prinzenallee,25,13359,Berlin
+Heinrich-Böll-Str.,4,13156,Berlin
+Feurigstr.,63,10827,Berlin
+Berenhorststr.,7,13403,Berlin
+Ladeburger Str.,17,16321,Bernau
+Phillippstraße,2,10115,Berlin
+Hubertusstr.,12-22,16547,Birkenwerder
+Exerzierstr.,33,13357,Berlin
+Klopstockstr.,16,10557,Berlin
+Rathenower Str.,53,10559,Berlin
+Hansastr.,8,13409,Berlin
+Waldstr.,51-52,10551,Berlin
+Agricolastr.,23,10555,Berlin
+Singdrosselsteig,4 Pz94,13629,Berlin
+Demminer Str.,8,13355,Berlin
+Ernst-Reuter-Siedlung,2,13355,Berlin
+Sonderburger Str.,18,13357,Berlin
+Stettinerstr.,64,13357,Berlin
+Große Hamburger Str,5-11,10115,Berlin
+Ramlerstr.,14 a,13355,Berlin
+Landhausstr.,22,10717,Berlin
+Holländerstr.,12,13407,Berlin
+Turiner Str.,16,13347,Berlin
+Marlenestr.,21,13505,Berlin
+Hosemannstr.,8,10409,Berlin
+Müllerstr.,119,13349,Berlin
+Afrikanische Str.,38,13351,Berlin
+Gleimstr.,64,13355,Berlin
+Jostweg,9,13465,Berlin
+Tile-Brügge-Weg,44,13509,Berlin
+Holländerstr.,108,13407,Berlin
+Hochstr.,38,13357,Berlin
+Luxemburger Str.,5c,13353,Berlin
+Michaelkirchstr.,24,10179,Berlin
+Bachstr.,5,10555,Berlin
+Neubrücker Str.,3,13465,Berlin
+Dresdener Str.,90,10179,Berlin
+Treuenbrietzener Str.,1,13439,Berlin
+Treuenbrietzener Str.,29,13439,Berlin
+Hussitenstr.,9,13355,Berlin
+Gotthardstr.,56,13407,Berlin
+Prinzenallee,47c,13357,Berlin
+Schwartzstr.,13,13409,Berlin
+Belowstr.,5,13403,Berlin
+General-Barby-Str.,78,13403,Berlin

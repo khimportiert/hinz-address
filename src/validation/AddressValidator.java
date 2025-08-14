@@ -164,8 +164,10 @@ public class AddressValidator {
             Map<String, String> addressParts = extractAddressParts(result);
             boolean isExactMatch =
                     !isPartialMatch
-                    && ("ROOFTOP".equals(locationType) || "RANGE_INTERPOLATED".equals(locationType))
+                    && !"APPROXIMATE".equals(locationType)
                     && addressParts.getOrDefault("postal_code", "").equals(inputAddress.plz())
+                    && addressParts.getOrDefault("locality", "").equals(inputAddress.city())
+                    && normalizeNumbers(addressParts.getOrDefault("street_number", "")).equals(normalizeNumbers(inputAddress.houseNumber()))
 //                    && compareAddressParts(addressParts, inputAddress)
                     ;
 
