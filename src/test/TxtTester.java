@@ -12,10 +12,10 @@ import java.io.IOException;
 public class TxtTester {
     public static void main(String[] args) {
 
-        Address adr = new Address("0", "",  "74172", "stuttgart", "berliner straße", "068");
+        Address adr = new Address("0", "",  "10117", "Berlin", "chariteplatz", "1");
         ValidationResult result = AddressValidator.validateWithBackup(adr);
         for (AddressMatch match : result.possibleMatches()) {
-            System.out.println(result.source() + ": " + match.formattedAddress());
+            System.out.println(result.source() + ": " + match.formattedAddress() + " (" + match.name() + ")" + " " + match.isExactMatch());
         }
 
         System.exit(0);

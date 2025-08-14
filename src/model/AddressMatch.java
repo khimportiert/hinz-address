@@ -11,16 +11,27 @@ public record AddressMatch(
         boolean isExactMatch
 ) implements Serializable {
 
+    private static final double TOLERANCE = 0.001; // ca. 100 Meter, je nach Breitengrad
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         AddressMatch that = (AddressMatch) o;
-        return Double.compare(lat, that.lat) == 0 && Double.compare(lng, that.lng) == 0 && Objects.equals(formattedAddress, that.formattedAddress) && Objects.equals(name, that.name);
+
+        boolean latClose = Math.abs(this.lat - that.lat) < TOLERANCE;
+        boolean lngClose = Math.abs(this.lng - that.lng) < TOLERANCE;
+
+        return latClose &&
+                lngClose &&
+                Objects.equals(this.formattedAddress, that.formattedAddress) &&
+                Objects.equals(this.name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, formattedAddress, lat, lng);
+        long latRounded = Math.round(lat / TOLERANCE);
+        long lngRounded = Math.round(lng / TOLERANCE);
+        return Objects.hash(name, formattedAddress, latRounded, lngRounded);
     }
 
     @Override
