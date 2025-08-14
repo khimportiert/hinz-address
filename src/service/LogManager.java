@@ -1,5 +1,7 @@
 package service;
 
+import config.AppConfig;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -12,6 +14,9 @@ public class LogManager {
 
     // Synchronized Methode zum Schreiben in das Log
     public synchronized static void logMessage(int port, String direction, String message) {
+        if (!AppConfig.logDebug())
+            return;
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(LOG_FILE, true))) {
             String timestamp = getCurrentTimestamp();
             String logMessage = String.format("[%s] %d %s %s", timestamp, port, direction, message);

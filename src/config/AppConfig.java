@@ -23,6 +23,14 @@ public class AppConfig {
         return Integer.parseInt(properties.getProperty("socket.timeout"));
     }
 
+    public static boolean useDummy() {
+        return Boolean.parseBoolean(properties.getProperty("use.dummy"));
+    }
+
+    public static boolean logDebug() {
+        return Boolean.parseBoolean(properties.getProperty("log.debug"));
+    }
+
     public static boolean getPhotonApiAllowed() {
         return Boolean.parseBoolean(properties.getProperty("photon.api.allowed"));
     }

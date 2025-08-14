@@ -1,5 +1,6 @@
 package service;
 
+import config.AppConfig;
 import model.AddressMatch;
 import model.ValidationResult;
 
@@ -20,9 +21,21 @@ public class AddressEncoder {
         String tmp = "";
         tmp += "#0EA";
         tmp += String.format("04%02X%s", result.requestedAddress().id().length(), result.requestedAddress().id());
-        tmp += String.format("0E%02X%s", 4, "0101"); // n vom m
-        tmp += String.format("03%02X%s", match.formattedAddress().length(), match.formattedAddress()); // txt
-        tmp += String.format("0715%s;%s", lng, lat); // lon;lat
+
+        if (match.isExactMatch() || !AppConfig.useDummy()) {
+            tmp += String.format("0E%02X%s", 4, "0101"); // n vom m
+            tmp += String.format("03%02X%s", match.formattedAddress().length(), match.formattedAddress()); // txt
+            tmp += String.format("0715%s;%s", lng, lat); // lon;lat
+        }
+        else {
+            tmp += String.format("0E%02X%s", 4, "0102"); // n vom m
+            tmp += String.format("03%02X%s", match.formattedAddress().length(), match.formattedAddress()); // txt
+            tmp += String.format("0715%s;%s", lng, lat); // lon;lat
+
+            tmp += String.format("0E%02X%s", 4, "0202"); // n vom m
+            tmp += String.format("03%02X%s", "Bitte nicht anklicken".length(), "Bitte nicht anklicken"); // txt
+            tmp += String.format("0715%s;%s", "013.408333", "052.518611"); // lon;lat von Berlin
+        }
 
         out.write(0x02);
         out.write(tmp);
@@ -30,8 +43,6 @@ public class AddressEncoder {
 
         return tmp;
     }
-
-    // TODO writeSinglePartialMatchResponse
 
     public static String writeMultiMatchTcpResponse(ValidationResult result, BufferedWriter out) throws IOException {
         out.write(0x02);

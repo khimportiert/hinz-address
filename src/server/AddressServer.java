@@ -34,6 +34,10 @@ public class AddressServer {
         try {
             serverSocket = new ServerSocket(AppConfig.getServerPort());
             System.out.println("Server gestartet auf Port " + AppConfig.getServerPort());
+            System.out.println("Debug Logger: " + AppConfig.logDebug());
+            System.out.println("Dummy Platzhalter hinzufügen: " + AppConfig.useDummy());
+            System.out.println("Photon Service: " + AppConfig.getPhotonApiAllowed());
+            System.out.println("Google Service: " + AppConfig.getGoogleApiAllowed());
 
             // Load Cache
             new AddressValidator();
@@ -110,7 +114,7 @@ public class AddressServer {
 
                 synchronized (out) {
                     String res;
-                    if (result.isExactMatch()) {
+                    if (result.isExactMatch() || result.possibleMatches().size() == 1) {
                         res = AddressEncoder.writeSingleMatchTcpResponse(result, out);
                     } else if (!result.possibleMatches().isEmpty()) {
                         res = AddressEncoder.writeMultiMatchTcpResponse(result, out);
