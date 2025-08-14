@@ -165,6 +165,7 @@ public class AddressValidator {
             boolean isExactMatch =
                     !isPartialMatch
                     && ("ROOFTOP".equals(locationType) || "RANGE_INTERPOLATED".equals(locationType))
+                    && addressParts.getOrDefault("postal_code", "").equals(inputAddress.plz())
 //                    && compareAddressParts(addressParts, inputAddress)
                     ;
 

@@ -1,6 +1,7 @@
 package test;
 
 import model.Address;
+import model.AddressMatch;
 import model.ValidationResult;
 import validation.AddressValidator;
 
@@ -10,6 +11,14 @@ import java.io.IOException;
 
 public class TxtTester {
     public static void main(String[] args) {
+
+        Address adr = new Address("0", "",  "74172", "stuttgart", "berliner straße", "068");
+        ValidationResult result = AddressValidator.validateWithBackup(adr);
+        for (AddressMatch match : result.possibleMatches()) {
+            System.out.println(result.source() + ": " + match.formattedAddress());
+        }
+
+        System.exit(0);
 
         try (BufferedReader br = new BufferedReader(new FileReader("adressen.txt"))) {
             String zeile;
