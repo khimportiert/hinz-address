@@ -14,7 +14,7 @@ public class TxtTester {
 
         Address adr = new Address("0", "",  "10117", "Berlin", "chariteplatz", "1");
         ValidationResult result = AddressValidator.validateWithBackup(adr);
-        for (AddressMatch match : result.possibleMatches()) {
+        for (AddressMatch match : result.possibleMatches().stream().distinct().toList()) {
             System.out.println(result.source() + ": " + match.formattedAddress() + " (" + match.name() + ")" + " " + match.isExactMatch());
         }
 

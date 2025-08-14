@@ -23,15 +23,16 @@ public record AddressMatch(
 
         return latClose &&
                 lngClose &&
-                Objects.equals(this.formattedAddress, that.formattedAddress) &&
-                Objects.equals(this.name, that.name);
+                this.formattedAddress.equals(that.formattedAddress) &&
+                this.name.equals(that.name) &&
+                this.isExactMatch == that.isExactMatch;
     }
 
     @Override
     public int hashCode() {
         long latRounded = Math.round(lat / TOLERANCE);
         long lngRounded = Math.round(lng / TOLERANCE);
-        return Objects.hash(name, formattedAddress, latRounded, lngRounded);
+        return Objects.hash(name, formattedAddress, latRounded, lngRounded, isExactMatch);
     }
 
     @Override
